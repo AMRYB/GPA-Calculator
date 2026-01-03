@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "HNU GPA Tool",
+  "version": "1.0.0",
+  "description": "GPA tool for HNU portal. Shows a notice overlay on other sites.",
+  "permissions": ["scripting", "activeTab"],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "action": {
+    "default_title": "HNU GPA Tool",
+    "default_popup": "popup.html"
+  }
+}

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HNU GPA</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 12px; width: 290px; }
+    h3 { margin: 0 0 10px; font-size: 16px; color: #222021; }
+    .box { background:#f7f7f7; border:1px solid #eee; border-radius:12px; padding:10px; margin-bottom:10px; }
+    .small { font-size: 12px; color:#444; }
+    .url { direction:ltr; unicode-bidi: plaintext; word-break: break-all; font-size: 12px; margin-top: 6px; }
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px;
+      cursor: pointer;
+      background: #222021;
+      color: #fff;
+      font-size: 14px;
+    }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .muted { margin: 10px 0 0; font-size: 12px; color: #666; line-height: 1.5; }
+    .err {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #ed1e26;
+      line-height: 1.4;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h3>أداة GPA للكلية</h3>
+
+  <div class="box">
+    <div class="small">الموقع المدعوم:</div>
+    <div class="url">https://myu.hnu.edu.eg/dashboard</div>
+  </div>
+
+  <button id="run">تشغيل</button>
+  <div id="err" class="err"></div>
+
+  <p class="muted">
+    لو أنت على موقع الكلية هتشتغل الأداة.
+    لو على أي موقع تاني هتظهر رسالة تنبيه داخل الصفحة.
+  </p>
+
+  <script src="popup.js"></script>
+</body>
+</html>
