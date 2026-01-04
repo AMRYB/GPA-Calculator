@@ -1,8 +1,12 @@
+// popup.js
 const TARGET_ORIGIN = "https://myu.hnu.edu.eg";
 const TARGET_DASHBOARD = "https://myu.hnu.edu.eg/dashboard";
+const GITHUB_URL = "https://github.com/AMRYB";
 
 const runBtn = document.getElementById("run");
+const openGradesBtn = document.getElementById("openGrades");
 const errBox = document.getElementById("err");
+const githubLink = document.getElementById("githubLink");
 
 function showError(text) {
   errBox.textContent = text;
@@ -11,7 +15,6 @@ function showError(text) {
 
 function isInjectableUrl(url) {
   if (!url) return false;
-  // ممنوع الحقن على chrome:// و edge:// و about: و file:// و chrome-extension://
   return !(
     url.startsWith("chrome://") ||
     url.startsWith("edge://") ||
@@ -21,6 +24,16 @@ function isInjectableUrl(url) {
   );
 }
 
+githubLink.addEventListener("click", (e) => {
+  e.preventDefault();
+  chrome.tabs.create({ url: GITHUB_URL });
+});
+
+openGradesBtn.addEventListener("click", async () => {
+  chrome.tabs.create({ url: TARGET_DASHBOARD });
+  window.close();
+});
+
 runBtn.addEventListener("click", async () => {
   errBox.style.display = "none";
   runBtn.disabled = true;
@@ -28,18 +41,17 @@ runBtn.addEventListener("click", async () => {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     if (!tab?.id || !tab.url) {
-      showError("مش قادر أوصل للتبويب الحالي.");
+      showError("Cannot access current tab.");
       runBtn.disabled = false;
       return;
     }
 
     if (!isInjectableUrl(tab.url)) {
-      showError("مش ينفع تشغيل الأداة على الصفحات الداخلية للمتصفح (chrome://). افتح أي موقع عادي وجرب تاني.");
+      showError("This page is not supported. Open any normal website and try again.");
       runBtn.disabled = false;
       return;
     }
 
-    // حقن content.js
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ["content.js"]
@@ -54,7 +66,7 @@ runBtn.addEventListener("click", async () => {
 
     window.close();
   } catch (e) {
-    showError(`حصل خطأ: ${e?.message || e}`);
+    showError(e?.message || String(e));
     runBtn.disabled = false;
   }
 });

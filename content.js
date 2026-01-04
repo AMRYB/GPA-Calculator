@@ -241,8 +241,97 @@ function injectOverlayStyles() {
   document.head.appendChild(style);
 }
 
-function runGpaTool(){
-  alert("هنا هنضيف حساب الـ GPA");
+function runGpaTool() {
+  if (!location.href.includes("/dashboard")) return;
+
+  renderGpaTables();
+
+  if (window.__hnu_gpa_observer) return;
+
+  const obs = new MutationObserver(() => {
+    clearTimeout(window.__hnu_gpa_timer);
+    window.__hnu_gpa_timer = setTimeout(renderGpaTables, 200);
+  });
+
+  obs.observe(document.body, { childList: true, subtree: true });
+  window.__hnu_gpa_observer = obs;
+}
+
+function renderGpaTables() {
+  const terms = document.querySelectorAll(".mb-8");
+
+  terms.forEach((term) => {
+    if (term.querySelector("[data-hnu-gpa]")) return;
+
+    const table = term.querySelector("table");
+    const vTable = term.querySelector(".v-table");
+    if (!table || !vTable) return;
+
+    const result = calculateTerm(table);
+
+    const gpaTable = document.createElement("div");
+    gpaTable.className = "v-table v-theme--light v-table--density-default";
+    gpaTable.setAttribute("data-hnu-gpa", "1");
+    gpaTable.style.marginTop = "12px";
+
+    gpaTable.innerHTML = `
+      <div class="v-table__wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>GPA Summary</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GPA</td>
+              <td>${result.gpa.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td>Total Marks</td>
+              <td>${result.marksEarned} / ${result.marksMax}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+
+    vTable.after(gpaTable);
+  });
+}
+
+function calculateTerm(table) {
+  let credits = 0;
+  let points = 0;
+  let marksEarned = 0;
+  let marksMax = 0;
+
+  table.querySelectorAll("tbody tr").forEach((tr) => {
+    const td = tr.querySelectorAll("td");
+    if (td.length < 6) return;
+
+    const credit = parseFloat(td[1].textContent);
+    const pts = parseFloat(td[3].textContent);
+    const grade = td[4].textContent.trim();
+    const marks = td[2].textContent.match(/(\d+)\s*\/\s*(\d+)/);
+
+    if (!["ABS", "CON", "I", "W", "—"].includes(grade)) {
+      if (!isNaN(credit)) credits += credit;
+      if (!isNaN(pts)) points += pts;
+    }
+
+    if (marks) {
+      marksEarned += +marks[1];
+      marksMax += +marks[2];
+    }
+  });
+
+  return {
+    gpa: credits ? points / credits : 0,
+    marksEarned,
+    marksMax
+  };
 }
 
 function escapeHtml(str){

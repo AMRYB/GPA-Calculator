@@ -1,51 +1,208 @@
+<!-- popup.html -->
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HNU GPA</title>
+  <title>GPA Calculator</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; padding: 12px; width: 290px; }
-    h3 { margin: 0 0 10px; font-size: 16px; color: #222021; }
-    .box { background:#f7f7f7; border:1px solid #eee; border-radius:12px; padding:10px; margin-bottom:10px; }
-    .small { font-size: 12px; color:#444; }
-    .url { direction:ltr; unicode-bidi: plaintext; word-break: break-all; font-size: 12px; margin-top: 6px; }
-    button {
-      width: 100%;
-      border: 0;
-      border-radius: 12px;
-      padding: 10px;
-      cursor: pointer;
-      background: #222021;
-      color: #fff;
-      font-size: 14px;
+    :root{
+      --red:#ed1e26;
+      --black:#222021;
+      --muted:#6b6b6b;
+      --bg:#ffffff;
+      --card:#f7f7f7;
+      --line:#e9e9e9;
     }
-    button:disabled { opacity: .6; cursor: not-allowed; }
-    .muted { margin: 10px 0 0; font-size: 12px; color: #666; line-height: 1.5; }
-    .err {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #ed1e26;
-      line-height: 1.4;
-      display: none;
+
+    body{
+      margin:0;
+      padding:14px;
+      width:320px;
+      background:var(--bg);
+      color:var(--black);
+      font-family: "Myriad Arabic","Tahoma","Arial",sans-serif;
+    }
+
+    .top{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .logo{
+      width:38px;
+      height:38px;
+      object-fit:contain;
+      flex:0 0 auto;
+    }
+
+    .titleWrap{
+      display:flex;
+      flex-direction:column;
+      line-height:1.2;
+    }
+
+    .title{
+      font-weight:900;
+      font-size:16px;
+      margin:0;
+    }
+
+    .by{
+      margin-top:4px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    .by a{
+      color:var(--muted);
+      text-decoration:none;
+      font-weight:700;
+    }
+
+    .by a:hover,
+    .by a:active,
+    .by a:visited{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .spacer{
+      height:12px;
+    }
+
+    .btns{
+      display:flex;
+      gap:10px;
+    }
+
+    .btn{
+      flex:1;
+      border:none;
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:900;
+      font-size:13px;
+    }
+
+    .btnPrimary{
+  display: inline-block;
+  width: 100%;
+  height: 43px;
+  background-color: #d17640;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  transition: 0.3s;
+}
+
+.btnPrimary:hover{
+  background-color: #6aabdf;
+}
+
+
+    .btnSecondary{
+      background:var(--card);
+      color:var(--black);
+      box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    .section{
+      margin-top:12px;
+      padding-top:12px;
+      border-top:1px solid var(--line);
+    }
+
+    .p{
+      margin:0 0 10px 0;
+      font-size:12px;
+      line-height:1.55;
+      color:#333;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    .noticeTitle{
+      font-weight:900;
+      color:var(--red);
+      margin:0 0 8px 0;
+      font-size:13px;
+    }
+
+    .list{
+      margin:0;
+      padding-left:16px;
+      font-size:12px;
+      line-height:1.55;
+      color:#333;
+    }
+
+    .list li{
+      margin-bottom:6px;
+    }
+
+    .myNotesTitle{
+      font-weight:900;
+      margin:12px 0 8px 0;
+      font-size:13px;
+      color:var(--black);
+    }
+
+    .myList{
+      margin:0;
+      padding-left:16px;
+      font-size:12px;
+      line-height:1.55;
+      color:#333;
+    }
+
+    .err{
+      display:none;
+      margin-top:10px;
+      font-size:12px;
+      color:var(--red);
+      line-height:1.4;
     }
   </style>
 </head>
 <body>
-  <h3>أداة GPA للكلية</h3>
-
-  <div class="box">
-    <div class="small">الموقع المدعوم:</div>
-    <div class="url">https://myu.hnu.edu.eg/dashboard</div>
+  <div class="top">
+    <img class="logo" src="assets/logo.png" alt="logo" />
+    <div class="titleWrap">
+      <div class="title">GPA Calculator</div>
+      <div class="by">By: <a id="githubLink" href="#" target="_blank" rel="noreferrer">Amr Yasser</a></div>
+    </div>
   </div>
 
-  <button id="run">تشغيل</button>
+  <div class="spacer"></div>
+
+  <div class="btns">
+    <button id="run" class="btn btnPrimary">Run</button>
+    <button id="openGrades" class="btn btnSecondary">Open Grades</button>
+  </div>
+
   <div id="err" class="err"></div>
 
-  <p class="muted">
-    لو أنت على موقع الكلية هتشتغل الأداة.
-    لو على أي موقع تاني هتظهر رسالة تنبيه داخل الصفحة.
-  </p>
+  <div class="section">
+    <p class="p muted">
+      This tool calculates GPA / CGPA, grades, cumulative grades, completed credit hours, and more.
+    </p>
+
+    <div class="noticeTitle">Notice</div>
+    <ol class="list">
+<li>This is not an official university tool. It is a personal tool I created to help students calculate their grades easily.</li>
+<li>The tool is still under development and may contain inaccuracies. If you have any concerns or notice an issue with the calculations, please contact me.</li>
+
+    </ol>
+
+
 
   <script src="popup.js"></script>
 </body>
