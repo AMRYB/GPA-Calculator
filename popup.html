@@ -75,6 +75,7 @@
     .btns{
       display:flex;
       gap:10px;
+      align-items:stretch;
     }
 
     .btn{
@@ -110,6 +111,63 @@
       background:var(--card);
       color:var(--black);
       box-shadow: inset 0 0 0 1px var(--line);
+    }
+
+    /* Faculty select (modern dark style) */
+    .facultyControl{
+      flex:1;
+      position:relative;
+      min-width:0;
+    }
+
+    .facultyLabel{
+      position:absolute;
+      top:6px;
+      left:12px;
+      font-size:10px;
+      font-weight:800;
+      color:rgba(255,255,255,0.65);
+      letter-spacing:0.2px;
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .facultySelect{
+      width:100%;
+      height:43px;
+      padding:18px 34px 8px 12px;
+      border-radius:12px;
+      border:1px solid #3a3a3a;
+      background:#282828;
+      color:#fff;
+      font-weight:900;
+      font-size:12px;
+      cursor:pointer;
+      outline:none;
+      appearance:none;
+      -webkit-appearance:none;
+      transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .facultyControl::after{
+      content:"▾";
+      position:absolute;
+      right:12px;
+      top:50%;
+      transform:translateY(-10%);
+      color:rgba(255,255,255,0.85);
+      pointer-events:none;
+      font-size:14px;
+    }
+
+    .facultySelect:hover{
+      background:#323232;
+      border-color:#4a4a4a;
+    }
+
+    .facultySelect:focus{
+      border-color:#5a5a5a;
+      box-shadow:0 0 0 3px rgba(255,255,255,0.14);
     }
 
     .section{
@@ -185,7 +243,13 @@
 
   <div class="btns">
     <button id="run" class="btn btnPrimary">Run</button>
-    <button id="openGrades" class="btn btnSecondary">Open Grades</button>
+    <div class="facultyControl">
+      <label class="facultyLabel" for="facultySelect">Faculty</label>
+      <select id="facultySelect" class="facultySelect" aria-label="Faculty">
+        <option value="FCSIT">FCS&amp;IT</option>
+        <option value="FHCBA">FHCBA</option>
+      </select>
+    </div>
   </div>
 
   <div id="err" class="err"></div>

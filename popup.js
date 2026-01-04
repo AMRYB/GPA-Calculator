@@ -3,10 +3,22 @@ const TARGET_ORIGIN = "https://myu.hnu.edu.eg";
 const TARGET_DASHBOARD = "https://myu.hnu.edu.eg/dashboard";
 const GITHUB_URL = "https://github.com/AMRYB";
 
+// Local preference (no extra manifest permissions needed)
+const FACULTY_KEY = "hnu_selected_faculty";
+const DEFAULT_FACULTY = "FCSIT";
+
 const runBtn = document.getElementById("run");
-const openGradesBtn = document.getElementById("openGrades");
 const errBox = document.getElementById("err");
 const githubLink = document.getElementById("githubLink");
+const facultySelect = document.getElementById("facultySelect");
+
+function getSelectedFaculty() {
+  return localStorage.getItem(FACULTY_KEY) || DEFAULT_FACULTY;
+}
+
+function setSelectedFaculty(value) {
+  localStorage.setItem(FACULTY_KEY, value);
+}
 
 function showError(text) {
   errBox.textContent = text;
@@ -29,10 +41,13 @@ githubLink.addEventListener("click", (e) => {
   chrome.tabs.create({ url: GITHUB_URL });
 });
 
-openGradesBtn.addEventListener("click", async () => {
-  chrome.tabs.create({ url: TARGET_DASHBOARD });
-  window.close();
-});
+// Init faculty dropdown
+if (facultySelect) {
+  facultySelect.value = getSelectedFaculty();
+  facultySelect.addEventListener("change", () => {
+    setSelectedFaculty(facultySelect.value);
+  });
+}
 
 runBtn.addEventListener("click", async () => {
   errBox.style.display = "none";
@@ -61,7 +76,8 @@ runBtn.addEventListener("click", async () => {
 
     await chrome.tabs.sendMessage(tab.id, {
       type: isTargetSite ? "HNU_RUN_GPA" : "HNU_SHOW_NOT_SUPPORTED",
-      targetUrl: TARGET_DASHBOARD
+      targetUrl: TARGET_DASHBOARD,
+      faculty: getSelectedFaculty()
     });
 
     window.close();

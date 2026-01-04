@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "GPA Calculator",
-  "version": "1.1",
-  "description": "GPA Calculator for FCS&IT students at HNU",
+  "version": "1.2",
+  "description": "GPA Calculator for HNU students",
   "permissions": ["scripting", "activeTab"],
   "icons": {
     "128": "/assets/icon.png"
