@@ -1,40 +1,49 @@
 <!doctype html>
 <html lang="en" dir="ltr">
-   <head>
-      <meta charset="utf-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>GPA Calculator</title>
-      <link rel="icon" href="assets/img/favicon.png">
-      <link rel="stylesheet" href="assets/css/style.css"/>
-   </head>
-   <body>
-      <div class="top">
-         <img class="logo" src="assets/img/logo.png" alt="logo" />
-         <div class="titleWrap">
-            <div class="title">GPA Calculator</div>
-            <div class="by">By: <a id="githubLink" href="#" target="_blank" rel="noreferrer">Amr Yasser</a></div>
-         </div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GPA Calculator</title>
+    <link rel="icon" href="assets/img/favicon.png" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+
+  <body>
+    <div class="top">
+      <img class="logo" src="assets/img/logo.png" alt="logo" />
+      <div class="titleWrap">
+        <div class="title">GPA Calculator</div>
+        <div class="by">By: <a id="githubLink" href="#" target="_blank" rel="noreferrer">Amr Yasser</a></div>
       </div>
-      <div class="spacer"></div>
-      <div class="btns">
-         <button id="run" class="btn btnPrimary">Run</button>
-         <div class="facultyControl">
-            <label class="facultyLabel" for="facultySelect">Faculty</label>
-            <select id="facultySelect" class="facultySelect" aria-label="Faculty">
-               <option value="FCSIT">CS&amp;IT</option>
-            </select>
-         </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="btns">
+      <button id="run" class="btn btnPrimary">Run</button>
+
+      <div class="facultyControl">
+        <label class="facultyLabel" for="facultySelect">Faculty</label>
+        <select id="facultySelect" class="facultySelect" aria-label="Faculty">
+          <option value="FCSIT">CS&amp;IT</option>
+          <option value="FHCBA">HCBA</option>
+        </select>
       </div>
-      <div id="err" class="err"></div>
-      <div class="section">
+    </div>
+
+    <div id="err" class="err"></div>
+
+    <div class="section">
       <p class="p muted">
-         This tool calculates GPA / CGPA, grades, cumulative grades, completed credit hours, and more.
+        This tool calculates GPA / CGPA, grades, cumulative grades, completed credit hours, and more.
       </p>
       <div class="noticeTitle">Notice</div>
       <ol class="list">
-         <li>This is not an official university tool. It is a personal tool I created to help students calculate their grades easily.</li>
-         <li>The tool is still under development and may contain inaccuracies. If you have any concerns or notice an issue with the calculations, please contact me.</li>
+        <li>This is not an official university tool. It is a personal tool I created to help students calculate their grades easily.</li>
+        <li>The tool is still under development and may contain inaccuracies. If you have any concerns or notice an issue with the calculations, please contact me.</li>
       </ol>
-      <script src="/assets/js/popup.js"></script>
-   </body>
+    </div>
+
+    <script src="/assets/js/popup.js"></script>
+  </body>
 </html>

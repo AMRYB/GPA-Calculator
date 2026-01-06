@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "GPA Calculator",
-  "version": "2.23",
+  "version": "2.48",
   "description": "GPA Calculator for HNU students",
   "permissions": ["scripting", "activeTab"],
   "icons": {

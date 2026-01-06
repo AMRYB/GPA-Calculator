@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 
   if (msg.type === "HNU_RUN_GPA") {
-    runGpaTool();
+    runGpaTool(msg.faculty);
   }
 });
 
@@ -273,8 +273,33 @@ function injectGpaStyles() {
   document.head.appendChild(style);
 }
 
-function runGpaTool() {
+const FACULTY = {
+  FCSIT: "FCSIT",
+  FHCBA: "FHCBA"
+};
+
+let ACTIVE_FACULTY = FACULTY.FCSIT;
+
+function normalizeFaculty(faculty) {
+  const key = String(faculty || "").trim().toUpperCase();
+  if (key === FACULTY.FHCBA) return FACULTY.FHCBA;
+  return FACULTY.FCSIT;
+}
+
+function setActiveFaculty(faculty) {
+  ACTIVE_FACULTY = normalizeFaculty(faculty);
+}
+
+function isFcsit() {
+  return ACTIVE_FACULTY === FACULTY.FCSIT;
+}
+
+function runGpaTool(faculty) {
   if (!location.href.includes("/dashboard")) return;
+
+  setActiveFaculty(faculty);
+
+  setRequiredTotalHours(ACTIVE_FACULTY);
 
   injectGpaStyles();
 
@@ -296,7 +321,18 @@ function runGpaTool() {
   window.__hnu_gpa_observer = obs;
 }
 
-const REQUIRED_TOTAL_HOURS = 138;
+const REQUIRED_TOTAL_HOURS_BY_FACULTY = {
+  FCSIT: 138,
+  FHCBA: 143
+};
+
+let REQUIRED_TOTAL_HOURS = REQUIRED_TOTAL_HOURS_BY_FACULTY.FCSIT;
+
+function setRequiredTotalHours(faculty) {
+  const key = String(faculty || "").trim().toUpperCase();
+  REQUIRED_TOTAL_HOURS = REQUIRED_TOTAL_HOURS_BY_FACULTY[key] ?? REQUIRED_TOTAL_HOURS_BY_FACULTY.FCSIT;
+}
+
 const IGNORE_COURSE_KEYS = ["UN31-MATH0"];
 
 const SKIP_GRADES = new Set(["CON", "I", "—", "-", ""]);
@@ -370,6 +406,29 @@ function fmtCredits(x) {
   return String(Number(x.toFixed(1)));
 }
 
+
+function gradeLabelFromGpa(value) {
+  if (!Number.isFinite(value)) return "";
+
+  // Faculty-specific cumulative label thresholds (0-4 scale)
+  if (isFcsit()) {
+    if (value < 1.0) return "Very Poor";
+    if (value < 2.0) return "Poor";
+    if (value < 2.5) return "Pass";
+    if (value < 3.0) return "Good";
+    if (value < 3.5) return "Very Good";
+    return "Excellent";
+  }
+
+  // FHCBA
+  if (value < 1.4) return "Very Poor";
+  if (value < 2.0) return "Poor";
+  if (value < 2.4) return "Pass";
+  if (value < 2.8) return "Good";
+  if (value < 3.4) return "Very Good";
+  return "Excellent";
+}
+
 function renderGpaTables() {
   const terms = Array.from(document.querySelectorAll(".mb-8"));
   if (!terms.length) return;
@@ -400,13 +459,16 @@ function renderGpaTables() {
       td.vTable.after(root);
     }
 
+    const gpaVal = td.termResult.gpa;
+    const cgpaVal = cumulative.cgpa;
+
     const left = buildMiniTableHtml("GPA Summary", [
-      ["GPA", td.termResult.gpa.toFixed(2)],
+      ["GPA", `${gpaVal.toFixed(2)} (${gradeLabelFromGpa(gpaVal)})`],
       ["Total Marks", `${td.termResult.marksEarned} / ${td.termResult.marksMax}`]
     ]);
 
     const right = buildMiniTableHtml("CGPA Summary", [
-      ["CGPA", cumulative.cgpa.toFixed(2)],
+      ["CGPA", `${cgpaVal.toFixed(2)} (${gradeLabelFromGpa(cgpaVal)})`],
       ["Cumulative Marks", `${cumulative.marksEarned} / ${cumulative.marksMax}`]
     ]);
 
@@ -591,7 +653,8 @@ function parseRow(tr) {
   const courseRaw = td[0].textContent.trim();
   const courseKey = extractCourseKey(courseRaw);
 
-  if (IGNORE_COURSE_KEYS.includes(courseKey.toUpperCase())) return null;
+  // Keep FCS&IT behaviour as-is (ignore UN31-MATH0, ...). HCBA includes all courses.
+  if (isFcsit() && IGNORE_COURSE_KEYS.includes(courseKey.toUpperCase())) return null;
 
   const credit = parseFloat(td[1].textContent);
   const grade = (td[4].textContent || "").trim();
