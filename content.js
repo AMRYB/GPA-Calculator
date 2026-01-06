@@ -370,6 +370,17 @@ function fmtCredits(x) {
   return String(Number(x.toFixed(1)));
 }
 
+
+function gradeLabelFromGpa(value) {
+  if (!Number.isFinite(value)) return "";
+  if (value < 1.0) return "Very Poor";
+  if (value < 2.0) return "Poor";
+  if (value < 2.5) return "Pass";
+  if (value < 3.0) return "Good";
+  if (value < 3.5) return "Very Good";
+  return "Excellent";
+}
+
 function renderGpaTables() {
   const terms = Array.from(document.querySelectorAll(".mb-8"));
   if (!terms.length) return;
@@ -400,13 +411,16 @@ function renderGpaTables() {
       td.vTable.after(root);
     }
 
+    const gpaVal = td.termResult.gpa;
+    const cgpaVal = cumulative.cgpa;
+
     const left = buildMiniTableHtml("GPA Summary", [
-      ["GPA", td.termResult.gpa.toFixed(2)],
+      ["GPA", `${gpaVal.toFixed(2)} (${gradeLabelFromGpa(gpaVal)})`],
       ["Total Marks", `${td.termResult.marksEarned} / ${td.termResult.marksMax}`]
     ]);
 
     const right = buildMiniTableHtml("CGPA Summary", [
-      ["CGPA", cumulative.cgpa.toFixed(2)],
+      ["CGPA", `${cgpaVal.toFixed(2)} (${gradeLabelFromGpa(cgpaVal)})`],
       ["Cumulative Marks", `${cumulative.marksEarned} / ${cumulative.marksMax}`]
     ]);
 
