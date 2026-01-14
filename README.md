@@ -153,12 +153,16 @@ If you found a bug or want a new feature:
 
 ---
 
-## Contributing
+## Notes
 
-Pull requests are welcome.
+### Important Notes
 
-Basic guidelines:
+- **HCBA faculty support is still experimental**.  
+  I currently do not have an HCBA account to fully test all scenarios, so some edge cases may exist.
+  There is also a possibility that **some courses are not included correctly** in the calculations.
 
-* Keep UI changes consistent with the dashboard style
-* Avoid hard-coding text that might change on the website
-* Test on multiple terms (including repeated courses)
+- If you see a message indicating that **you cannot use the tool**, don’t worry.  
+  I will personally guide you on **how to use it correctly**, or explain alternative ways to calculate your GPA.
+
+- In some cases, there may be **workarounds or known calculation gaps** that can still allow you to get accurate results.
+  If you encounter any issues, feel free to reach out or open an issue.
