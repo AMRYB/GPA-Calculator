@@ -705,16 +705,32 @@
   }
 
   function extractAttemptsFromCards(cards) {
+    // IMPORTANT:
+    // buildProgressiveCumulative() expects attempts to carry points/marks/pass info.
+    // Desktop path (extractAttempts) provides these fields, but mobile path previously
+    // returned only (credit, gradePoint), which made CGPA/Hours stay at 0 on mobile.
     return cards
       .map(parseCardRow)
       .filter(Boolean)
-      .map((r) => ({
-        courseKey: r.courseKey,
-        credit: r.credit,
-        gradePoint: r.gradePoint,
-        skipCompletely: r.skipCompletely,
-        skipForGpa: r.skipForGpa,
-      }));
+      .filter((r) => !r.skipCompletely)
+      .map((r) => {
+        const points = Number.isFinite(r.points)
+          ? r.points
+          : (Number.isFinite(r.gradePoint) && Number.isFinite(r.credit) ? r.gradePoint * r.credit : NaN);
+
+        return {
+          courseKey: r.courseKey,
+          credit: r.credit,
+          points,
+          gradePoint: r.gradePoint,
+          marksEarned: r.marksEarned,
+          marksMax: r.marksMax,
+          isPass: r.isPass,
+          // Keep flags for potential debugging/compat.
+          skipCompletely: r.skipCompletely,
+          skipForGpa: r.skipForGpa,
+        };
+      });
   }
 
   function parseCardRow(card) {
