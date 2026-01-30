@@ -1,0 +1,118 @@
+<!--ChatGPT 5.2-->
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GPA Calculator</title>
+    <style>
+@font-face{font-family:"Myriad Arabic";src:url("assets/MyriadArabic.woff2") format("woff2");font-display:swap;}
+      :root{--bg:#133d85;--card:#ffffff;--text:#0f172a;--muted:#6b7280;--line:rgba(15,23,42,.12);--soft:#f1f5f9;--soft2:#f8fafc;--shadow:0 18px 55px rgba(0,0,0,.22);--github:#24292f;--githubHover:#1f2328;--githubActive:#161b22;--ok:#22c55e;--bad:#ef4444;--blue:#2563eb;}
+      *{box-sizing:border-box;}
+      body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--text);font-family:"Myriad Arabic","Tahoma","Arial",sans-serif;}
+      .wrap{width:min(560px,92vw);padding:24px 14px;}
+      .card{width:100%;background:var(--card);border-radius:24px;padding:34px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px;}
+      .title{margin:0;font-size:56px;font-weight:900;letter-spacing:.2px;text-align:center;}
+      .subtitle{margin:10px 0 6px;color:var(--muted);font-size:22px;font-weight:900;line-height:1.45;text-align:center;}
+      .reqCard{border:1px solid var(--line);background:var(--soft2);border-radius:18px;padding:18px;}
+      .reqTitle{font-size:17px;font-weight:900;margin:0;}
+      .reqList{list-style:none;padding:0;margin:12px 0 0;}
+      .reqList li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(15,23,42,.08);}
+      .reqList li:first-child{border-top:none;padding-top:6px;}
+      .reqList li:last-child{padding-bottom:6px;}
+      .reqItemIcon svg{width:18px;height:18px;fill:currentColor;}
+      .reqItemIcon--done{color:var(--ok);}
+      .reqText{font-size:17px;font-weight:900;color:#111827;line-height:1.5;}
+      .reqLink{color:var(--bg);font-weight:900;text-decoration:none;}
+      .reqLink:hover{text-decoration:underline;}
+      .reqLink:focus-visible{outline:3px solid rgba(19,61,133,.25);outline-offset:2px;border-radius:6px;}
+      .reqCard.isGuest .reqItemIcon{color:var(--bg);}
+      .reqCard.isGuest .reqText{color:var(--text);}
+      .reqCard.isGuest .reqLink{color:var(--bg);}
+      .status{margin:2px 0 2px;font-size:14px;font-weight:900;color:rgba(15,23,42,.65);text-align:center;}
+      .btnCol{display:flex;flex-direction:column;gap:10px;}
+      .btn{width:100%;height:54px;border-radius:16px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:900;font-size:17px;transition:transform .08s ease,background-color .18s ease,box-shadow .18s ease;user-select:none;}
+      .btn:active{transform:translateY(1px);}
+      .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+      .btnGithub{background:var(--github);color:#fff;box-shadow:0 10px 22px rgba(36,41,47,.28);}
+      .btnGithub:hover{background:var(--githubHover);}
+      .btnGithub:active{background:var(--githubActive);}
+      .btnSoft{background:var(--soft);color:var(--text);border:1px solid rgba(15,23,42,.10);}
+      .btnSoft:hover{background:#e8eef6;}
+      .ghIcon{width:18px;height:18px;fill:currentColor;flex:0 0 auto;}
+      .codeBox{border:1px dashed rgba(15,23,42,.22);border-radius:18px;padding:18px;background:var(--soft2);}
+      .codeTitle{font-weight:900;margin:0 0 10px;font-size:17px;}
+      .codeSub{margin:-6px 0 12px;color:var(--muted);font-size:14px;font-weight:900;}
+      .codeValue{font-size:34px;font-weight:900;letter-spacing:2px;padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);text-align:center;}
+      .codeActions{margin-top:12px;display:flex;flex-direction:column;gap:10px;}
+      .doneBox{border:1px solid rgba(34,197,94,.32);background:rgba(34,197,94,.10);border-radius:18px;padding:20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
+      .doneIcon{width:64px;height:64px;border-radius:999px;background:rgba(34,197,94,.18);color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;}
+      .doneText{font-size:28px;font-weight:900;color:#0f172a;}
+      .doneSub{font-size:14px;font-weight:900;color:var(--muted);}
+      
+      
+      
+      
+      
+      
+      
+      @media (prefers-reduced-motion:reduce){.btn{transition:none;}}
+      @media (max-width:420px){.card{padding:22px;border-radius:18px;}.title{font-size:44px;}.subtitle{font-size:18px;}.codeValue{font-size:28px;}}
+</style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1 class="title">GPA Calculator</h1>
+        <p class="subtitle">Verify your account to unlock all features</p>
+        <div id="doneBox" class="doneBox" style="display:none;">
+          <div class="doneIcon">✓</div>
+          <div class="doneText">Done</div>
+          <div class="doneSub">Closing this tab…</div>
+        </div>
+        <div id="reqSection" class="reqCard isGuest">
+          <div class="reqTitle">Requirements</div>
+          <ul class="reqList">
+            <li>
+              <span id="iconFollow" class="reqItemIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M12 12a4.5 4.5 0 1 0-4.5-4.5A4.505 4.505 0 0 0 12 12Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z"></path>
+                </svg>
+              </span>
+              <div class="reqText">Follow <a class="reqLink" href="https://github.com/AMRYB" target="_blank" rel="noopener">AMRYB</a> on GitHub</div>
+            </li>
+            <li>
+              <span id="iconStar" class="reqItemIcon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.62L12 2 9.19 8.62 2 9.24l5.46 4.73L5.82 21 12 17.27Z"></path>
+                </svg>
+              </span>
+              <div class="reqText">Star the <a class="reqLink" href="https://github.com/AMRYB/GPA-Calculator" target="_blank" rel="noopener">GPA-Calculator</a> repository</div>
+            </li>
+          </ul>
+        </div>
+        <div id="statusLine" class="status">GitHub: Not signed in</div>
+        <div id="actionsSection" class="btnCol">
+          <button id="loginBtn" class="btn btnGithub" aria-label="Login with GitHub" type="button">
+            <svg class="ghIcon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path>
+            </svg>
+            <span>Login with GitHub</span>
+          </button>
+          <button id="recheckBtn" class="btn btnSoft" type="button">Re-check</button>
+          <button id="logoutBtn" class="btn btnSoft" type="button">Logout</button>
+        </div>
+        <div id="codeBox" class="codeBox" style="display:none;">
+          <div class="codeTitle">Enter this code on GitHub</div>
+          <div id="approvalMsg" class="codeSub">GitHub: Waiting for approval…</div>
+          <div class="codeValue" id="userCode">—</div>
+          <div class="codeActions">
+            <button id="copyCodeBtn" class="btn btnSoft" type="button">Copy code</button>
+            <button id="openDevicePageBtn" class="btn btnSoft" type="button">Open GitHub device page</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="assets/js/auth.js"></script>
+  </body>
+</html>

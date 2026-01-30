@@ -1,0 +1,122 @@
+/* ChatGPT 5.2 */
+.authPage{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#133d85;
+}
+
+.authWrap{
+  width:min(920px,94vw);
+  padding:34px;
+}
+
+.authCard{
+  width:100%;
+  background:#fff;
+  border-radius:24px;
+  padding:34px;
+  box-shadow:0 18px 50px rgba(0,0,0,.18);
+}
+
+@media (max-width:520px){
+  .authWrap{ padding:18px; }
+  .authCard{ padding:20px; border-radius:18px; }
+}
+
+.authHeader{
+  display:flex;
+  gap:14px;
+  align-items:center;
+  margin-bottom:18px;
+}
+
+.authIcon{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+}
+
+.authTitle{
+  font-size:20px;
+  font-weight:900;
+  color:#222021;
+}
+
+.authSubtitle{
+  font-size:14px;
+  font-weight:700;
+  opacity:.7;
+}
+
+.authStatus{
+  font-size:18px;
+  font-weight:900;
+  margin:6px 0 6px;
+}
+
+.authNote{
+  font-size:14px;
+  font-weight:700;
+  opacity:.8;
+  margin-bottom:18px;
+}
+
+.authBtns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:16px;
+}
+
+.authLinks{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:14px;
+}
+
+.codeBox{
+  border:2px dashed rgba(0,0,0,.18);
+  border-radius:18px;
+  padding:18px;
+  margin:10px 0 10px;
+}
+
+.codeTitle{
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.codeValue{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:2px;
+  padding:14px 16px;
+  border-radius:16px;
+  background:rgba(0,0,0,.06);
+  display:inline-block;
+  min-width:240px;
+  text-align:center;
+}
+
+.codeActions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.codeHint{
+  margin-top:10px;
+  font-size:13px;
+  font-weight:700;
+  opacity:.75;
+}
+
+@media (max-width:520px){
+  .codeValue{ font-size:22px; min-width:200px; }
+}

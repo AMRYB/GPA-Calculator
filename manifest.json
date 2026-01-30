@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
   "name": "GPA Calculator",
-  "version": "3.12",
+  "version": "3.65",
   "description": "GPA Calculator for HNU students",
-  "permissions": ["scripting", "activeTab"],
+  "permissions": ["scripting", "activeTab", "storage"],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://api.github.com/*"
+  ],
   "icons": {
     "128": "/assets/img/favicon.png"
   },

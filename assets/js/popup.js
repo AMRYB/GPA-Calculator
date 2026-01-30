@@ -5,10 +5,30 @@ const GITHUB_URL="https://github.com/AMRYB";
 const FACULTY_KEY="hnu_selected_faculty";
 const DEFAULT_FACULTY="FCSIT";
 
-const runBtn=document.getElementById("run");
-const errBox=document.getElementById("err");
-const githubLink=document.getElementById("githubLink");
-const facultySelect=document.getElementById("facultySelect");
+async function storageGet(keys){
+  return new Promise((resolve)=>chrome.storage.local.get(keys,(r)=>resolve(r||{})));
+}
+
+async function openAuthPageAndClose(){
+  try{
+    const url=chrome.runtime.getURL("auth.html");
+    chrome.tabs.create({url});
+  }catch{}
+  window.close();
+}
+
+async function init(){
+
+  const {auth_ok}=await storageGet(["auth_ok"]);
+  if(!auth_ok){
+    await openAuthPageAndClose();
+    return;
+  }
+
+  const runBtn=document.getElementById("run");
+  const errBox=document.getElementById("err");
+  const githubLink=document.getElementById("githubLink");
+  const facultySelect=document.getElementById("facultySelect");
 
 function showError(message){
   if(!errBox) return;
@@ -149,48 +169,51 @@ function enhanceSelect(nativeSelect){
   buildOptions();
 }
 
-if(githubLink){
-  githubLink.href=GITHUB_URL;
-  githubLink.addEventListener("click",()=>{
-    chrome.tabs.create({url:GITHUB_URL});
-  });
-}
+  if(githubLink){
+    githubLink.href=GITHUB_URL;
+    githubLink.addEventListener("click",()=>{
+      chrome.tabs.create({url:GITHUB_URL});
+    });
+  }
 
-if(facultySelect){
-  facultySelect.value=getSelectedFaculty();
-  facultySelect.addEventListener("change",()=>{
-    setSelectedFaculty(facultySelect.value);
-  });
-  enhanceSelect(facultySelect);
-}
+  if(facultySelect){
+    facultySelect.value=getSelectedFaculty();
+    facultySelect.addEventListener("change",()=>{
+      setSelectedFaculty(facultySelect.value);
+    });
+    enhanceSelect(facultySelect);
+  }
 
-if(runBtn){
-  runBtn.addEventListener("click",async()=>{
-    showError("");
-    runBtn.disabled=true;
+  if(runBtn){
+    runBtn.addEventListener("click",async()=>{
+      showError("");
+      runBtn.disabled=true;
 
-    try{
-      const tab=await getActiveTab();
-      if(!tab?.id||!tab?.url) throw new Error("No active tab found.");
+      try{
+        const tab=await getActiveTab();
+        if(!tab?.id||!tab?.url) throw new Error("No active tab found.");
 
-      if(tab.url.startsWith("chrome://")||tab.url.startsWith("edge://")||tab.url.startsWith("about:")){
-        throw new Error("Open the university site page first, then click Run.");
+        if(tab.url.startsWith("chrome://")||tab.url.startsWith("edge://")||tab.url.startsWith("about:")){
+          throw new Error("Open the university site page first, then click Run.");
+        }
+
+        await ensureContentScript(tab.id);
+
+        const isTargetSite=tab.url.startsWith(TARGET_ORIGIN);
+
+        await chrome.tabs.sendMessage(tab.id,{
+          type:isTargetSite?"HNU_RUN_GPA":"HNU_SHOW_NOT_SUPPORTED",
+          targetUrl:TARGET_DASHBOARD,
+          faculty:(facultySelect&&facultySelect.value)?facultySelect.value:getSelectedFaculty()
+        });
+
+        window.close();
+      }catch(e){
+        showError(e?.message||String(e));
+        runBtn.disabled=false;
       }
-
-      await ensureContentScript(tab.id);
-
-      const isTargetSite=tab.url.startsWith(TARGET_ORIGIN);
-
-      await chrome.tabs.sendMessage(tab.id,{
-        type:isTargetSite?"HNU_RUN_GPA":"HNU_SHOW_NOT_SUPPORTED",
-        targetUrl:TARGET_DASHBOARD,
-        faculty:(facultySelect&&facultySelect.value)?facultySelect.value:getSelectedFaculty()
-      });
-
-      window.close();
-    }catch(e){
-      showError(e?.message||String(e));
-      runBtn.disabled=false;
-    }
-  });
+    });
+  }
 }
+
+init();
