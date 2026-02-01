@@ -8,6 +8,7 @@ const PROFILE_URL = `https://github.com/${REQUIRED_FOLLOW_USER}`;
 const DEVICE_CODE_ENDPOINT = "https://github.com/login/device/code";
 const DEVICE_TOKEN_ENDPOINT = "https://github.com/login/oauth/access_token";
 const API_BASE = "https://api.github.com";
+const DASHBOARD_URL = "https://myu.hnu.edu.eg/dashboard";
 
 const statusLine = document.getElementById("statusLine");
 const loginBtn = document.getElementById("loginBtn");
@@ -21,12 +22,18 @@ const approvalMsg = document.getElementById("approvalMsg");
 const copyCodeBtn = document.getElementById("copyCodeBtn");
 const openDevicePageBtn = document.getElementById("openDevicePageBtn");
 const doneBox = document.getElementById("doneBox");
+const subtitleEl = document.getElementById("subtitle");
+const termsBox = document.getElementById("termsBox");
+const acceptBtn = document.getElementById("acceptBtn");
+const acceptHint = document.getElementById("acceptHint");
 const iconFollow = document.getElementById("iconFollow");
 const iconStar = document.getElementById("iconStar");
 
 let pollTimer = null;
 let isDone = false;
 let lastAutoCheckAt = 0;
+let termsTimer = null;
+let isTermsShown = false;
 
 function setGuestMode(on) {
   try {
@@ -52,6 +59,8 @@ function setDeviceStage(deviceMode) {
   if (reqSection) reqSection.style.display = deviceMode ? "none" : "block";
   if (actionsSection) actionsSection.style.display = deviceMode ? "none" : "flex";
   if (statusLine) statusLine.style.display = deviceMode ? "none" : "block";
+  if (termsBox) termsBox.style.display = "none";
+  try { if (subtitleEl) subtitleEl.style.display = "block"; } catch {}
   if (approvalMsg) approvalMsg.textContent = "GitHub: Waiting for approval…";
 }
 
@@ -71,14 +80,44 @@ function updateRequirementsUI({ hasFollow = false, hasStar = false } = {}) {
   setIcon(iconStar, hasStar);
 }
 
-function showDoneAndClose() {
-  isDone = true;
-  try { if (doneBox) doneBox.style.display = "flex"; } catch {}
+function showTerms() {
+  isDone = false;
+  isTermsShown = true;
+  try { if (doneBox) doneBox.style.display = "none"; } catch {}
+  try { if (subtitleEl) subtitleEl.style.display = "none"; } catch {}
   try { if (reqSection) reqSection.style.display = "none"; } catch {}
   try { if (actionsSection) actionsSection.style.display = "none"; } catch {}
   try { if (codeBox) codeBox.style.display = "none"; } catch {}
   try { if (statusLine) statusLine.style.display = "none"; } catch {}
-  setTimeout(() => tryCloseTab(), 900);
+  try { if (termsBox) termsBox.style.display = "block"; } catch {}
+
+  try { if (termsTimer) clearInterval(termsTimer); } catch {}
+
+  let remaining = 15;
+  try {
+    if (acceptBtn) {
+      acceptBtn.disabled = true;
+      acceptBtn.textContent = `تمام (${remaining})`;
+    }
+    if (acceptHint) acceptHint.textContent = "انتظر 15 ثانية لقراءة البنود…";
+  } catch {}
+
+  termsTimer = setInterval(() => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      try {
+        if (acceptBtn) {
+          acceptBtn.disabled = false;
+          acceptBtn.textContent = "تمام";
+        }
+        if (acceptHint) acceptHint.textContent = "";
+      } catch {}
+      try { clearInterval(termsTimer); } catch {}
+      termsTimer = null;
+      return;
+    }
+    try { if (acceptBtn) acceptBtn.textContent = `تمام (${remaining})`; } catch {}
+  }, 1000);
 }
 
 function tryCloseTab() {
@@ -181,8 +220,6 @@ async function startDeviceFlow() {
     if (userCodeEl) userCodeEl.textContent = flow.user_code;
     setDeviceStage(true);
     setStatus("GitHub: Waiting for approval…");
-    const openUrl = flow.verification_uri_complete || flow.verification_uri || "https://github.com/login/device";
-    openTab(openUrl);
     await pollForToken();
   } catch (e) {
     console.error(e);
@@ -254,8 +291,10 @@ async function pollForToken() {
 
 async function verifyRequirements() {
   if (isDone) return;
+  if (isTermsShown) return;
   setDeviceStage(false);
   try { if (doneBox) doneBox.style.display = "none"; } catch {}
+  try { if (termsBox) termsBox.style.display = "none"; } catch {}
   try { if (reqSection) reqSection.style.display = "block"; } catch {}
   try { if (actionsSection) actionsSection.style.display = "flex"; } catch {}
 
@@ -306,7 +345,7 @@ async function verifyRequirements() {
 
     if (ok) {
       setStatus(`GitHub: Signed in as ${(me && me.login) ? me.login : ""} ✅`);
-      showDoneAndClose();
+      showTerms();
     } else {
       setStatus(`GitHub: Signed in as ${(me && me.login) ? me.login : ""}`);
       console.log("Requirements not complete", { hasFollow, hasStar });
@@ -326,7 +365,12 @@ async function verifyRequirements() {
 async function logout() {
   try { if (pollTimer) clearTimeout(pollTimer); } catch {}
   isDone = false;
+  isTermsShown = false;
+  try { if (termsTimer) clearInterval(termsTimer); } catch {}
+  termsTimer = null;
   try { if (doneBox) doneBox.style.display = "none"; } catch {}
+  try { if (termsBox) termsBox.style.display = "none"; } catch {}
+  try { if (subtitleEl) subtitleEl.style.display = "block"; } catch {}
   setGuestMode(true);
   updateRequirementsUI({ hasFollow: false, hasStar: false });
   await storageRemove(["gh_access_token", "gh_device_flow", "auth_ok", "gh_user", "gh_has_star", "gh_has_follow", "auth_verified_at"]);
@@ -356,12 +400,25 @@ if (openDevicePageBtn) openDevicePageBtn.addEventListener("click", async () => {
   openTab(url);
 });
 
+if (acceptBtn) acceptBtn.addEventListener("click", async () => {
+  if (acceptBtn.disabled) return;
+  try {
+    await storageSet({ terms_accepted_at: Date.now() });
+  } catch {}
+  try {
+    window.location.href = DASHBOARD_URL;
+  } catch {
+    openTab(DASHBOARD_URL);
+  }
+});
+
 (async () => {
   setDeviceStage(false);
   setAuthButtons(false);
   setGuestMode(true);
   updateRequirementsUI({ hasFollow: false, hasStar: false });
   try { if (doneBox) doneBox.style.display = "none"; } catch {}
+  try { if (termsBox) termsBox.style.display = "none"; } catch {}
 
   const { gh_device_flow, gh_access_token } = await storageGet(["gh_device_flow", "gh_access_token"]);
 
@@ -382,6 +439,7 @@ if (openDevicePageBtn) openDevicePageBtn.addEventListener("click", async () => {
 window.addEventListener("focus", async () => {
   const now = Date.now();
   if (isDone || now - lastAutoCheckAt < 1500) return;
+  if (isTermsShown) return;
   lastAutoCheckAt = now;
   try {
     const { gh_access_token } = await storageGet(["gh_access_token"]);

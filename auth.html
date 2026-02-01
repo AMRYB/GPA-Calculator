@@ -10,28 +10,49 @@
       :root{--bg:#133d85;--card:#ffffff;--text:#0f172a;--muted:#6b7280;--line:rgba(15,23,42,.12);--soft:#f1f5f9;--soft2:#f8fafc;--shadow:0 18px 55px rgba(0,0,0,.22);--github:#24292f;--githubHover:#1f2328;--githubActive:#161b22;--ok:#22c55e;--bad:#ef4444;--blue:#2563eb;}
       *{box-sizing:border-box;}
       body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--text);font-family:"Myriad Arabic","Tahoma","Arial",sans-serif;}
-      .wrap{width:min(560px,92vw);padding:24px 14px;}
-      .card{width:100%;background:var(--card);border-radius:24px;padding:34px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:16px;}
-      .title{margin:0;font-size:56px;font-weight:900;letter-spacing:.2px;text-align:center;}
-      .subtitle{margin:10px 0 6px;color:var(--muted);font-size:22px;font-weight:900;line-height:1.45;text-align:center;}
-      .reqCard{border:1px solid var(--line);background:var(--soft2);border-radius:18px;padding:18px;}
-      .reqTitle{font-size:17px;font-weight:900;margin:0;}
+      .wrap{width:min(760px,94vw);padding:28px 16px;}
+      .card{width:100%;background:var(--card);border-radius:24px;padding:44px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:18px;}
+      .top{display:flex;align-items:flex-start;justify-content:flex-start;margin-bottom:0;}
+      .bigLogo{width:180px;height:70px;object-fit:contain;flex:0 0 auto;}
+      .subtitle{margin:-2px 0 0;color:var(--muted);font-size:24px;font-weight:900;line-height:1.45;text-align:center;}
+
+      .sectionTitle{font-size:20px;font-weight:900;color:#111827;margin:0 0 12px;text-align:left;}
+      .legendTitle{
+        position:absolute;
+        top:0;
+        left:16px;
+        transform:translateY(-50%);
+        margin:0;
+        padding:2px 12px;
+        background:var(--soft2);
+        border:1px dashed rgba(15,23,42,.22);
+        border-radius:999px;
+        font-size:18px;
+        font-weight:900;
+        color:#111827;
+        line-height:1.2;
+      }
+
+      .reqCard{position:relative;border:1px dashed rgba(15,23,42,.22);background:var(--soft2);border-radius:18px;padding:32px 18px 18px;}
+      .reqCard .sectionTitle{display:none;}
       .reqList{list-style:none;padding:0;margin:12px 0 0;}
       .reqList li{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid rgba(15,23,42,.08);}
       .reqList li:first-child{border-top:none;padding-top:6px;}
       .reqList li:last-child{padding-bottom:6px;}
       .reqItemIcon svg{width:18px;height:18px;fill:currentColor;}
-      .reqItemIcon--done{color:var(--ok);}
-      .reqText{font-size:17px;font-weight:900;color:#111827;line-height:1.5;}
+      .reqItemIcon{color:#000;}
+      .reqItemIcon--done{color:#000;}
+      .reqText{font-size:24px;font-weight:900;color:#111827;line-height:1.5;}
       .reqLink{color:var(--bg);font-weight:900;text-decoration:none;}
       .reqLink:hover{text-decoration:underline;}
       .reqLink:focus-visible{outline:3px solid rgba(19,61,133,.25);outline-offset:2px;border-radius:6px;}
-      .reqCard.isGuest .reqItemIcon{color:var(--bg);}
+      .reqCard.isGuest .reqItemIcon{color:#000;}
       .reqCard.isGuest .reqText{color:var(--text);}
       .reqCard.isGuest .reqLink{color:var(--bg);}
-      .status{margin:2px 0 2px;font-size:14px;font-weight:900;color:rgba(15,23,42,.65);text-align:center;}
-      .btnCol{display:flex;flex-direction:column;gap:10px;}
-      .btn{width:100%;height:54px;border-radius:16px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:900;font-size:17px;transition:transform .08s ease,background-color .18s ease,box-shadow .18s ease;user-select:none;}
+      .status{margin:2px 0 2px;font-size:18px;font-weight:900;color:rgba(15,23,42,.65);text-align:center;}
+      .btnRow{display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;}
+      .btn{flex:1;width:100%;height:66px;border-radius:16px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:10px;font-weight:900;font-size:20px;transition:transform .08s ease,background-color .18s ease,box-shadow .18s ease;user-select:none;}
+      .btnFull{flex:1 1 100%;}
       .btn:active{transform:translateY(1px);}
       .btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
       .btnGithub{background:var(--github);color:#fff;box-shadow:0 10px 22px rgba(36,41,47,.28);}
@@ -39,16 +60,31 @@
       .btnGithub:active{background:var(--githubActive);}
       .btnSoft{background:var(--soft);color:var(--text);border:1px solid rgba(15,23,42,.10);}
       .btnSoft:hover{background:#e8eef6;}
+      .btnOrange{background:#d17640;color:#fff;}
+      .btnOrange:hover{background:#6aabdf;}
+      .btnBlue{background:#1a3e84;color:#fff;}
+      .btnBlue:hover{background:#123064;}
       .ghIcon{width:18px;height:18px;fill:currentColor;flex:0 0 auto;}
-      .codeBox{border:1px dashed rgba(15,23,42,.22);border-radius:18px;padding:18px;background:var(--soft2);}
-      .codeTitle{font-weight:900;margin:0 0 10px;font-size:17px;}
-      .codeSub{margin:-6px 0 12px;color:var(--muted);font-size:14px;font-weight:900;}
-      .codeValue{font-size:34px;font-weight:900;letter-spacing:2px;padding:12px;border-radius:14px;background:#fff;border:1px solid var(--line);text-align:center;}
-      .codeActions{margin-top:12px;display:flex;flex-direction:column;gap:10px;}
+      .codeBox{position:relative;border:1px dashed rgba(15,23,42,.22);border-radius:18px;padding:32px 18px 18px;background:var(--soft2);}
+      .codeTitle{margin:0 0 12px;}
+      .codeSub{margin:-6px 0 12px;color:var(--muted);font-size:18px;font-weight:900;}
+      .codeValue{font-size:48px;font-weight:900;letter-spacing:2px;padding:14px;border-radius:14px;background:#fff;border:1px solid var(--line);text-align:center;}
+      .codeActions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;}
       .doneBox{border:1px solid rgba(34,197,94,.32);background:rgba(34,197,94,.10);border-radius:18px;padding:20px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;}
       .doneIcon{width:64px;height:64px;border-radius:999px;background:rgba(34,197,94,.18);color:var(--ok);display:flex;align-items:center;justify-content:center;font-size:36px;font-weight:900;}
       .doneText{font-size:28px;font-weight:900;color:#0f172a;}
       .doneSub{font-size:14px;font-weight:900;color:var(--muted);}
+
+      .termsBox{position:relative;border:1px dashed rgba(15,23,42,.22);background:var(--soft2);border-radius:18px;padding:32px 18px 18px;direction:rtl;text-align:right;}
+      .termsBox .legendTitle{left:auto;right:16px;}
+      .termsTitle{font-size:26px;font-weight:900;margin:0 0 10px;color:#0f172a;}
+      .termsH{font-size:20px;font-weight:900;margin:16px 0 6px;color:#0f172a;}
+      .termsP{margin:0;color:#111827;font-size:18px;font-weight:800;line-height:1.7;}
+      .termsList{margin:8px 0 0;padding-left:18px;color:#111827;font-size:18px;font-weight:800;line-height:1.7;}
+      .termsDanger{color:#ed1e26;}
+      .termsActions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;}
+      .termsHint{margin-top:10px;color:rgba(15,23,42,.65);font-size:16px;font-weight:900;text-align:center;}
+      #acceptBtn{font-family:inherit;}
       
       
       
@@ -57,21 +93,55 @@
       
       
       @media (prefers-reduced-motion:reduce){.btn{transition:none;}}
-      @media (max-width:420px){.card{padding:22px;border-radius:18px;}.title{font-size:44px;}.subtitle{font-size:18px;}.codeValue{font-size:28px;}}
+      @media (max-width:420px){.card{padding:22px;border-radius:18px;}.bigLogo{width:160px;height:62px;}.subtitle{font-size:18px;}.sectionTitle{font-size:18px;}.reqText{font-size:20px;}.btn{font-size:18px;height:60px;}.codeValue{font-size:36px;}}
 </style>
   </head>
   <body>
     <div class="wrap">
       <div class="card">
-        <h1 class="title">GPA Calculator</h1>
-        <p class="subtitle">Verify your account to unlock all features</p>
+        <div class="top">
+          <img class="bigLogo" src="assets/img/Big_logo.png" alt="logo" />
+        </div>
+        <div id="subtitle" class="subtitle">Verify your account to unlock all features</div>
         <div id="doneBox" class="doneBox" style="display:none;">
           <div class="doneIcon">✓</div>
           <div class="doneText">Done</div>
           <div class="doneSub">Closing this tab…</div>
         </div>
+
+        <div id="termsBox" class="termsBox" style="display:none;">
+          <div class="legendTitle">بنود الاستخدام</div>
+
+          <div class="termsH">الأداة غير رسمية</div>
+          <p class="termsP">هذه الأداة ليست تابعة للجامعة أو ممثلة لها بأي شكل. هي مبادرة شخصية وتطوعية مني.</p>
+
+          <div class="termsH">دقة حساب الـ GPA</div>
+          <p class="termsP">حساب الـ GPA مبني على فهمي للائحة الدراسية، وقد تمت مراجعته يدويًا. لذلك:</p>
+          <ul class="termsList">
+            <li>النتائج تقريبية فقط</li>
+            <li>وارد وجود أخطاء في الحساب</li>
+            <li>لا يُعتمد عليها كمرجع رسمي</li>
+          </ul>
+
+          <div class="termsH">المسؤولية</div>
+          <p class="termsP">أنا غير مسؤول عن أي قرارات أكاديمية أو شخصية يتم اتخاذها بناءً على نتائج هذه الأداة.</p>
+
+          <div class="termsH">تسجيل الدخول عبر GitHub</div>
+          <p class="termsP">بعد ربط حساب GitHub، <span class="termsDanger">يتم ربط الجهاز بحساب جامعي واحد فقط لحساب الـ GPA.</span></p>
+
+          <div class="termsH termsDanger">استخدام الحساب الشخصي فقط</div>
+          <p class="termsP termsDanger">يجب التأكد من أنك تستخدم حسابك الجامعي الشخصي، وليس حساب صديق أو أي شخص آخر.</p>
+
+          <div class="termsH">قابلية التحديث</div>
+          <p class="termsP">من حقي تعديل هذه البنود أو تحديث الأداة في أي وقت دون إشعار مسبق.</p>
+
+          <div class="termsActions">
+            <button id="acceptBtn" class="btn btnOrange btnFull" type="button" disabled>تمام</button>
+          </div>
+          <div id="acceptHint" class="termsHint">انتظر 15 ثانية لقراءة البنود…</div>
+        </div>
         <div id="reqSection" class="reqCard isGuest">
-          <div class="reqTitle">Requirements</div>
+          <div class="legendTitle">Requirements</div>
           <ul class="reqList">
             <li>
               <span id="iconFollow" class="reqItemIcon" aria-hidden="true">
@@ -92,23 +162,23 @@
           </ul>
         </div>
         <div id="statusLine" class="status">GitHub: Not signed in</div>
-        <div id="actionsSection" class="btnCol">
-          <button id="loginBtn" class="btn btnGithub" aria-label="Login with GitHub" type="button">
+        <div id="actionsSection" class="btnRow">
+          <button id="loginBtn" class="btn btnGithub btnFull" aria-label="Login with GitHub" type="button">
             <svg class="ghIcon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
               <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8Z"></path>
             </svg>
             <span>Login with GitHub</span>
           </button>
-          <button id="recheckBtn" class="btn btnSoft" type="button">Re-check</button>
-          <button id="logoutBtn" class="btn btnSoft" type="button">Logout</button>
+          <button id="recheckBtn" class="btn btnOrange" type="button">Re-check</button>
+          <button id="logoutBtn" class="btn btnBlue" type="button">Logout</button>
         </div>
         <div id="codeBox" class="codeBox" style="display:none;">
-          <div class="codeTitle">Enter this code on GitHub</div>
+          <div class="legendTitle">Enter this code on GitHub</div>
           <div id="approvalMsg" class="codeSub">GitHub: Waiting for approval…</div>
           <div class="codeValue" id="userCode">—</div>
           <div class="codeActions">
-            <button id="copyCodeBtn" class="btn btnSoft" type="button">Copy code</button>
-            <button id="openDevicePageBtn" class="btn btnSoft" type="button">Open GitHub device page</button>
+            <button id="copyCodeBtn" class="btn btnOrange" type="button">Copy code</button>
+            <button id="openDevicePageBtn" class="btn btnBlue" type="button">Open GitHub device</button>
           </div>
         </div>
       </div>
